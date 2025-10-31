@@ -1,23 +1,31 @@
 package com.keyin.airtravel.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.util.*;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "city")
 public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
     private String state;
+
     private Integer population;
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Airport> airports = new ArrayList<>();
+    @JsonManagedReference("city-airports")
+    private Set<Airport> airports = new LinkedHashSet<>();
 
     public City() {}
 
@@ -39,6 +47,6 @@ public class City {
     public Integer getPopulation() { return population; }
     public void setPopulation(Integer population) { this.population = population; }
 
-    public List<Airport> getAirports() { return airports; }
-    public void setAirports(List<Airport> airports) { this.airports = airports; }
+    public Set<Airport> getAirports() { return airports; }
+    public void setAirports(Set<Airport> airports) { this.airports = airports; }
 }

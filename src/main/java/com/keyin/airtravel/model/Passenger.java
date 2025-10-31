@@ -1,25 +1,30 @@
 package com.keyin.airtravel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.util.*;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "passenger")
 public class Passenger {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank @Column(nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @NotBlank @Column(nullable = false)
     private String lastName;
 
     private String phoneNumber;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "city_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id", nullable = false)
     private City city;
 
     @ManyToMany
@@ -28,7 +33,8 @@ public class Passenger {
             joinColumns = @JoinColumn(name = "passenger_id"),
             inverseJoinColumns = @JoinColumn(name = "flight_id")
     )
-    private Set<Flight> flights = new HashSet<>();
+    @JsonIgnore // prevent Passenger -> flights -> passengers -> ... recursion
+    private Set<Flight> flights = new LinkedHashSet<>();
 
     public Passenger() {}
 

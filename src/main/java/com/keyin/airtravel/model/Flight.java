@@ -1,33 +1,43 @@
 package com.keyin.airtravel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "flight")
 public class Flight {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "aircraft_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "aircraft_id", nullable = false)
     private Aircraft aircraft;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "origin_airport_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "origin_airport_id", nullable = false)
     private Airport origin;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "destination_airport_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "destination_airport_id", nullable = false)
     private Airport destination;
 
+    @NotNull
     @Column(nullable = false)
     private LocalDateTime departureTime;
 
     @ManyToMany(mappedBy = "flights")
-    private Set<Passenger> passengers = new HashSet<>();
+    @JsonIgnore
+    private Set<Passenger> passengers = new LinkedHashSet<>();
 
     public Flight() {}
 
@@ -37,7 +47,7 @@ public class Flight {
         this.destination = destination;
         this.departureTime = departureTime;
     }
-    
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

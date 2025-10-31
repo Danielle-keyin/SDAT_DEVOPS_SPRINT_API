@@ -1,23 +1,30 @@
 package com.keyin.airtravel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.util.*;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "aircraft")
 public class Aircraft {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank @Column(nullable = false)
     private String type;
 
     private String airlineName;
+
     private Integer numberOfPassengers;
 
-    @OneToMany(mappedBy = "aircraft", cascade = CascadeType.ALL)
-    private List<Flight> flights = new ArrayList<>();
+    @OneToMany(mappedBy = "aircraft")
+    @JsonIgnore
+    private Set<Flight> flights = new LinkedHashSet<>();
 
     public Aircraft() {}
 
@@ -39,6 +46,6 @@ public class Aircraft {
     public Integer getNumberOfPassengers() { return numberOfPassengers; }
     public void setNumberOfPassengers(Integer numberOfPassengers) { this.numberOfPassengers = numberOfPassengers; }
 
-    public List<Flight> getFlights() { return flights; }
-    public void setFlights(List<Flight> flights) { this.flights = flights; }
+    public Set<Flight> getFlights() { return flights; }
+    public void setFlights(Set<Flight> flights) { this.flights = flights; }
 }
