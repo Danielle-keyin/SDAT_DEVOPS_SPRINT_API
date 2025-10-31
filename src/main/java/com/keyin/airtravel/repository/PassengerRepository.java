@@ -1,4 +1,7 @@
 package com.keyin.airtravel.repository;
 
-public class PassengerRepository {
+import com.keyin.airtravel.model.Passenger;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PassengerRepository extends JpaRepository<Passenger, Long> {
 }
